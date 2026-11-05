@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sahar · Réveil Fajr</title>
+<meta name="description" content="Sahar, le réveil qui vous lève pour le Fajr : heure du Fajr calculée chaque jour pour votre position, vrai réveil même en mode silencieux, horaires et adhan, hadith du jour, Qibla et mode Ramadan. Gratuit, sans publicité, sans collecte de données.">
+<meta name="apple-itunes-app" content="app-id=6815186387">
+<meta name="theme-color" content="#0a0f1e">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sahar · Réveil Fajr">
+<meta property="og:description" content="Le réveil qui vous lève pour le Fajr, chaque jour à la bonne heure. Gratuit, sans publicité.">
+<meta property="og:image" content="app_icon.png">
+<link rel="icon" href="favicon.png">
+<link rel="apple-touch-icon" href="app_icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri&amp;family=Figtree:wght@400;500;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;display=swap">
+</head>
+<body>
+<style>
+/* Une nuit qui s'achève : la page descend du ciel noir vers l'aube dorée ; la frise de la nuit en est l'axe. */
+:root {
+  color-scheme: dark;
+  --night: #0a0f1e;
+  --ink: #0f1424;
+  --surface: #171d33;
+  --line: #2a3152;
+  --star: #f4f0e6;
+  --muted: #a9b0c4;
+  --gold: #e7b75f;
+  --gold-deep: #c9953f;
+  --dawn: #f2a072;
+  --display: "Newsreader", "New York", "Iowan Old Style", Georgia, serif;
+  --body: "Figtree", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --arabic: "Amiri", "Geeza Pro", "Noto Naskh Arabic", serif;
+  --gutter-l: max(20px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(20px, env(safe-area-inset-right, 0px));
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--night);
+  color: var(--star);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--gold); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 8px; }
+img { max-width: 100%; height: auto; display: block; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); margin: 0; }
+h1, h2, h3 { font-family: var(--display); font-weight: 500; text-wrap: balance; margin: 0; }
+h1 em, h2 em { font-style: italic; color: var(--gold); font-weight: 400; }
+p { margin: 0; }
+.lede { color: var(--muted); max-width: 34em; }
+
+/* Ciel : étoiles fixes, dessinées une fois */
+.sky {
+  background:
+    radial-gradient(1.5px 1.5px at 12% 18%, rgba(244,240,230,.8) 50%, transparent 51%),
+    radial-gradient(1px 1px at 27% 42%, rgba(244,240,230,.55) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 44% 12%, rgba(244,240,230,.7) 50%, transparent 51%),
+    radial-gradient(1px 1px at 63% 30%, rgba(244,240,230,.5) 50%, transparent 51%),
+    radial-gradient(2px 2px at 81% 16%, rgba(231,183,95,.75) 50%, transparent 51%),
+    radial-gradient(1px 1px at 91% 48%, rgba(244,240,230,.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 6% 62%, rgba(244,240,230,.45) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 54% 70%, rgba(244,240,230,.4) 50%, transparent 51%),
+    linear-gradient(180deg, var(--night) 0%, var(--ink) 100%);
+}
+
+/* En-tête */
+.top { padding-block: 18px; }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--star); text-decoration: none; font-family: var(--display); font-size: 22px; }
+.brand img { width: 36px; height: 36px; border-radius: 9px; }
+.top nav { display: flex; gap: 20px; font-size: 15px; }
+.top nav a { color: var(--muted); text-decoration: none; }
+.top nav a:hover { color: var(--star); }
+@media (max-width: 640px) { .top nav { display: none; } }
+
+/* Ouverture */
+.hero { padding-block: 40px 72px; position: relative; overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; }
+.hero h1 { font-size: clamp(40px, 6.2vw, 72px); line-height: 1.04; margin-top: 16px; }
+.hero .lede { margin-top: 20px; font-size: 18px; }
+.ar-mark { font-family: var(--arabic); color: var(--gold); opacity: .9; font-size: 30px; margin-left: 10px; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px; border-radius: 999px; font-weight: 700; font-size: 16px; text-decoration: none; }
+.btn-gold { background: var(--gold); color: #1b1407; }
+.btn-gold:hover { background: #efc678; }
+.btn-ghost { border: 1px solid var(--line); color: var(--star); }
+.btn-ghost:hover { border-color: var(--muted); }
+.btn svg { width: 20px; height: 20px; flex: none; }
+.trust { margin-top: 18px; font-size: 14px; color: var(--muted); }
+.hero-art { position: relative; min-width: 0; }
+.hero-art::before { content: ""; position: absolute; inset: 12% 8% 6% 8%; background: radial-gradient(closest-side, rgba(231,183,95,.22), transparent); filter: blur(10px); }
+.hero-art img { position: relative; width: 100%; max-width: 520px; margin-left: auto; }
+.fajr-chip { position: absolute; left: 0; bottom: 8%; background: rgba(15,20,36,.88); border: 1px solid var(--line); border-radius: 18px; padding: 12px 16px; backdrop-filter: blur(6px); }
+.fajr-chip small { display: block; color: var(--muted); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+.fajr-chip strong { font-family: var(--display); font-weight: 400; font-size: 38px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+@media (max-width: 860px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .hero-art img { margin: 0 auto; max-width: 420px; }
+  .fajr-chip { left: 4%; }
+}
+
+/* Frise de la nuit */
+.night { padding-block: 72px; background: var(--ink); border-top: 1px solid var(--line); }
+.night h2 { font-size: clamp(30px, 4vw, 44px); margin-top: 10px; }
+.night .lede { margin-top: 14px; }
+.timeline { margin-top: 40px; position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.timeline::before { content: ""; position: absolute; left: 4%; right: 4%; top: 15px; height: 2px; background: linear-gradient(90deg, #39407a, #6b5aa0 45%, var(--gold) 78%, var(--dawn)); }
+.tick { position: relative; text-align: center; min-width: 0; }
+.tick .dot { width: 14px; height: 14px; border-radius: 50%; margin: 9px auto 14px; background: var(--ink); border: 2px solid #6b72a8; }
+.tick.sahar .dot { border-color: var(--gold); background: var(--gold); box-shadow: 0 0 0 6px rgba(231,183,95,.18); }
+.tick.fajr .dot { border-color: var(--gold); }
+.tick.shuruq .dot { border-color: var(--dawn); }
+.tick b { display: block; font-family: var(--display); font-weight: 500; font-size: 20px; }
+.tick time { display: block; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 15px; }
+.tick span { display: block; color: var(--muted); font-size: 13px; margin-top: 6px; line-height: 1.4; }
+.tick.sahar b, .tick.fajr b { color: var(--gold); }
+.note { margin-top: 22px; font-size: 13px; color: var(--muted); }
+@media (max-width: 720px) {
+  .timeline { grid-template-columns: 1fr; gap: 0; }
+  .timeline::before { left: 7px; right: auto; top: 10px; bottom: 10px; width: 2px; height: auto; background: linear-gradient(180deg, #39407a, #6b5aa0 45%, var(--gold) 78%, var(--dawn)); }
+  .tick { display: grid; grid-template-columns: 30px 1fr; text-align: left; padding-bottom: 18px; column-gap: 12px; }
+  .tick .dot { margin: 6px 0 0; grid-row: span 3; }
+}
+
+/* Fonctions */
+.features { padding-block: 80px; background: linear-gradient(180deg, var(--ink), #12182c); }
+.features h2 { font-size: clamp(30px, 4vw, 44px); margin-top: 10px; max-width: 18em; }
+.grid { margin-top: 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.feature { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 24px; min-width: 0; }
+.feature svg { width: 30px; height: 30px; color: var(--gold); }
+.feature h3 { font-size: 22px; margin-top: 14px; }
+.feature p { color: var(--muted); margin-top: 8px; font-size: 16px; }
+@media (max-width: 960px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+
+/* Hadith du jour */
+.hadith { padding-block: 80px; background: #12182c; }
+.hadith .wrap { display: grid; grid-template-columns: .9fr 1.1fr; gap: 48px; align-items: center; }
+.hadith h2 { font-size: clamp(30px, 4vw, 44px); margin-top: 10px; }
+.hadith .lede { margin-top: 16px; }
+.hadith ul { margin: 22px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; color: var(--muted); font-size: 16px; }
+.hadith li { display: grid; grid-template-columns: 18px 1fr; gap: 10px; }
+.hadith li::before { content: "✦"; color: var(--gold); font-size: 12px; line-height: 1.9; }
+.hadith figure { margin: 0; min-width: 0; }
+.hadith figcaption { margin-top: 10px; font-size: 13px; color: var(--muted); text-align: center; }
+@media (max-width: 860px) { .hadith .wrap { grid-template-columns: 1fr; } .hadith figure { order: -1; max-width: 460px; margin: 0 auto; } }
+
+/* Confiance */
+.trustband { padding-block: 64px; background: linear-gradient(180deg, #12182c, #1b1d35); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.fact b { display: block; font-family: var(--display); font-size: 28px; font-weight: 500; color: var(--gold); }
+.fact span { color: var(--muted); font-size: 15px; }
+@media (max-width: 760px) { .facts { grid-template-columns: repeat(2, 1fr); } }
+
+/* Questions */
+.faq { padding-block: 80px; background: #1b1d35; }
+.faq h2 { font-size: clamp(30px, 4vw, 44px); margin-top: 10px; }
+.faq .list { margin-top: 32px; display: grid; gap: 12px; max-width: 820px; }
+details { background: rgba(23,29,51,.8); border: 1px solid var(--line); border-radius: 18px; padding: 4px 20px; }
+summary { cursor: pointer; list-style: none; padding-block: 16px; font-weight: 700; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; color: var(--gold); font-weight: 400; font-size: 22px; line-height: 1; }
+details[open] summary::after { content: "–"; }
+details p { color: var(--muted); padding-bottom: 18px; font-size: 16px; }
+
+/* Aube : téléchargement */
+.dawn { padding-block: 96px 88px; text-align: center; background: linear-gradient(180deg, #1b1d35 0%, #3a2b45 38%, #8a5547 72%, #d9875e 100%); }
+.dawn h2 { font-size: clamp(34px, 5vw, 56px); }
+.dawn h2 em { color: #ffe2b3; }
+.dawn p { margin: 16px auto 0; max-width: 32em; color: #f7e6d6; }
+.dawn .cta { justify-content: center; }
+.dawn .btn-gold { background: var(--star); color: #2a1a12; }
+.dawn .btn-ghost { border-color: rgba(255,240,225,.55); color: #fff7ee; }
+.shop { margin-top: 26px; font-size: 14px; color: #fde9d6; }
+
+/* Textes légaux */
+.legal { padding-block: 72px; background: var(--ink); }
+.legal .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.legal h2 { font-size: 30px; }
+.legal h3 { font-family: var(--body); font-size: 15px; font-weight: 700; margin-top: 20px; color: var(--star); }
+.legal p { color: var(--muted); font-size: 15px; margin-top: 8px; max-width: 40em; }
+.legal .updated { color: var(--gold); font-size: 14px; margin-top: 6px; }
+.legal section + section { margin-top: 56px; }
+@media (max-width: 860px) { .legal .cols { grid-template-columns: 1fr; } }
+
+footer { padding-block: 28px 40px; background: var(--night); border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
+footer nav { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+footer a { color: var(--muted); }
+.mail { user-select: all; color: var(--star); }
+</style>
+
+<header class="top sky">
+  <div class="wrap">
+    <a class="brand" href="#accueil"><img src="app_icon.png" alt="" width="36" height="36">Sahar</a>
+    <nav aria-label="Sections">
+      <a href="#nuit">La nuit</a>
+      <a href="#fonctions">Fonctions</a>
+      <a href="#hadith">Hadith du jour</a>
+      <a href="#questions">Questions</a>
+      <a href="#confidentialite">Confidentialité</a>
+    </nav>
+  </div>
+</header>
+
+<main id="accueil">
+  <section class="hero sky">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Sahar · Réveil Fajr <span class="ar-mark" lang="ar">سَحَر</span></p>
+        <h1>Levez-vous pour le Fajr, <em>chaque jour à la bonne heure.</em></h1>
+        <p class="lede">Sahar calcule chaque jour l’heure du Fajr pour l’endroit où vous êtes et vous réveille comme une vraie alarme de l’iPhone, même en mode silencieux. Horaires et adhan, hadith du jour, Qibla et mode Ramadan : l’essentiel pour commencer la journée par la prière.</p>
+        <div class="cta">
+          <a class="btn btn-gold" href="https://apps.apple.com/app/id6815186387">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.2.8 1.3 0 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.4-.9-2.4-3.9zM14 5.5c.6-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4z"/></svg>
+            Télécharger pour iPhone
+          </a>
+          <a class="btn btn-ghost" href="https://play.google.com/store/apps/details?id=fr.agca.sahar">Android</a>
+        </div>
+        <p class="trust">Gratuit · Sans publicité · Sans compte · Aucune donnée collectée · 12 langues</p>
+      </div>
+      <div class="hero-art">
+        <img src="hero_phones.png" alt="Sahar sur iPhone : l’heure du prochain Fajr, le réveil et le hadith du jour, à côté de la boussole Qibla." width="1568" height="1652">
+        <div class="fajr-chip" aria-hidden="true"><small>Prochain Fajr</small><strong>06:41</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="night" id="nuit">
+    <div class="wrap">
+      <p class="eyebrow">La nuit, vue par Sahar</p>
+      <h2>Le <em>sahar</em>, c’est la fin de la nuit, juste avant l’aube.</h2>
+      <p class="lede">Le moment du sahûr et de la prière de la nuit, celui où l’on se lève pour le Fajr. Sahar suit la nuit chaque jour selon votre position et sonne au moment que vous avez choisi : avant le Fajr, à l’heure du Fajr ou un peu après, jamais trop tard pour prier avant le lever du soleil.</p>
+      <div class="timeline" role="list">
+        <div class="tick" role="listitem"><div class="dot"></div><b>Maghrib</b><time>18:47</time><span>La nuit commence</span></div>
+        <div class="tick" role="listitem"><div class="dot"></div><b>Isha</b><time>19:54</time><span>Dernière prière du jour</span></div>
+        <div class="tick sahar" role="listitem"><div class="dot"></div><b>Dernier tiers</b><time>02:43</time><span>Le temps de la prière de la nuit et du sahûr</span></div>
+        <div class="tick fajr" role="listitem"><div class="dot"></div><b>Fajr</b><time>06:41</time><span>Votre réveil sonne, ici 5 min avant</span></div>
+        <div class="tick shuruq" role="listitem"><div class="dot"></div><b>Shurûq</b><time>07:48</time><span>Lever du soleil : le Fajr se prie avant</span></div>
+      </div>
+      <p class="note">Exemple : Lutterbach (Alsace), 14 octobre 2026. Sahar calcule les horaires chaque jour pour votre position.</p>
+    </div>
+  </section>
+
+  <section class="features" id="fonctions">
+    <div class="wrap">
+      <p class="eyebrow">Fonctions</p>
+      <h2>Tout ce qu’il faut pour ne plus manquer la prière de l’aube.</h2>
+      <div class="grid">
+        <article class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="7.5"/><path d="M12 9.5V13l2.5 1.6M4.5 4.5 2.8 6.2M19.5 4.5l1.7 1.7"/></svg>
+          <h3>Un vrai réveil</h3>
+          <p>Une alarme de l’iPhone, calculée chaque jour : elle sonne même en mode silencieux et en mode Concentration. Rappel de 5 minutes, et un bouton Arrêter sur l’écran verrouillé.</p>
+        </article>
+        <article class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3l4.5-3.5v12L7 14.5H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+          <h3>Le volume qui vous convient</h3>
+          <p>Une jauge de volume, de très doux à fort, et un bouton « Tester le réveil » : un vrai réveil sonne 10 secondes après, pour entendre le niveau réel avant de dormir.</p>
+        </article>
+        <article class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19h18M5 19V11l7-5 7 5v8"/><path d="M10 19v-4h4v4M12 3v3"/></svg>
+          <h3>Horaires et adhan</h3>
+          <p>Les cinq prières et le lever du soleil, pour votre position ou la ville choisie, avec l’adhan à l’heure de chaque prière si vous le souhaitez.</p>
+        </article>
+        <article class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20v3H6.5"/><path d="M9 8h7M9 11.5h5"/></svg>
+          <h3>Hadith du jour</h3>
+          <p>Chaque jour, un hadith authentique, clair et utile au quotidien, en arabe et dans votre langue, avec sa source. À partager en image d’un geste.</p>
+        </article>
+        <article class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>
+          <h3>Qibla</h3>
+          <p>La direction de la Kaaba depuis l’endroit où vous êtes, avec une boussole et une vérification par le soleil quand la boussole hésite.</p>
+        </article>
+        <article class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/><path d="M17 3.5v3M15.5 5h3"/></svg>
+          <h3>Mode Ramadan</h3>
+          <p>Un réveil pour le sahûr 10, 20 ou 30 minutes avant l’imsak des calendriers, un rappel à l’heure du Fajr et à l’iftar.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="hadith" id="hadith">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Hadith du jour</p>
+        <h2>Une parole du Prophète ﷺ <em>pour bien commencer la journée.</em></h2>
+        <p class="lede">Une sélection de hadiths authentiques (sahîh et hasan), choisis parce qu’ils sont clairs et utiles au quotidien. Dans chaque langue, seuls ceux dont la traduction est de bonne qualité sont proposés.</p>
+        <ul>
+          <li>Le texte arabe, la traduction, le recueil et le degré d’authenticité.</li>
+          <li>Les mêmes hadiths dans l’appli et dans la notification du jour.</li>
+          <li>Vos favoris, gardés sur votre téléphone.</li>
+        </ul>
+      </div>
+      <figure>
+        <img src="hadith_card.png" alt="Carte « Hadith du jour » de Sahar : le hadith en arabe, sa traduction française et sa source." width="1216" height="1440" loading="lazy">
+        <figcaption>Hadiths et traductions : Encyclopédie des hadiths prophétiques traduits (HadeethEnc.com), sans modification.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="trustband" aria-label="En bref">
+    <div class="wrap facts">
+      <div class="fact"><b>Gratuit</b><span>Toutes les fonctions, sans achat intégré.</span></div>
+      <div class="fact"><b>Sans publicité</b><span>Rien ne s’intercale entre vous et la prière.</span></div>
+      <div class="fact"><b>Privé</b><span>Aucun compte, aucune donnée collectée.</span></div>
+      <div class="fact"><b>12 langues</b><span>Dont l’arabe, le turc et l’ourdou.</span></div>
+    </div>
+  </section>
+
+  <section class="faq" id="questions">
+    <div class="wrap">
+      <p class="eyebrow">Questions</p>
+      <h2>Ce qu’on nous demande le plus.</h2>
+      <div class="list">
+        <details>
+          <summary>Le réveil sonne-t-il en mode silencieux ?</summary>
+          <p>Oui. Sahar programme une vraie alarme de l’iPhone (AlarmKit) : elle sonne même en mode silencieux et en mode Concentration, téléphone verrouillé.</p>
+        </details>
+        <details>
+          <summary>Comment régler le volume du réveil ?</summary>
+          <p>Avec la jauge de volume de Sahar, puis le bouton « Tester le réveil » pour entendre le niveau réel. Le maximum est le volume des alarmes de l’iPhone : sur iOS 27, Réglages &gt; Sons et vibrations &gt; Alarmes et minuteurs.</p>
+        </details>
+        <details>
+          <summary>Et si j’utilise mon iPhone à l’heure du réveil ?</summary>
+          <p>iOS n’affiche pas toujours une alarme quand on se sert du téléphone à ce moment-là. Sahar envoie donc une notification de secours environ six minutes après, sauf si vous avez touché « Arrêter ». Pour cela, autorisez les notifications de Sahar.</p>
+        </details>
+        <details>
+          <summary>Faut-il ouvrir l’appli tous les jours ?</summary>
+          <p>Non. Sahar prépare les réveils des 30 prochains jours et les renouvelle tout seul. Ouvrez-la de temps en temps, surtout après un voyage, pour que les horaires suivent votre position.</p>
+        </details>
+        <details>
+          <summary>Quelle méthode de calcul est utilisée ?</summary>
+          <p>Sahar se base par défaut sur le calendrier de la Diyanet, suivi par beaucoup de mosquées (« Calendrier Sahar » dans les réglages). Vous pouvez choisir une autre méthode : Musulmans de France (12°), Ligue islamique mondiale, Umm al-Qura, ISNA, Égypte, Karachi et d’autres.</p>
+        </details>
+        <details>
+          <summary>Sahar existe-t-elle sur Android ?</summary>
+          <p>L’appli Android est en test sur Google Play et sera ouverte à tous très prochainement.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="dawn" id="telecharger">
+    <div class="wrap">
+      <h2>Demain, <em>soyez debout pour le Fajr.</em></h2>
+      <p>Réglez votre réveil une seule fois : il suit l’heure du Fajr chaque jour, où que vous soyez.</p>
+      <div class="cta">
+        <a class="btn btn-gold" href="https://apps.apple.com/app/id6815186387">Télécharger pour iPhone</a>
+        <a class="btn btn-ghost" href="https://play.google.com/store/apps/details?id=fr.agca.sahar">Android</a>
+      </div>
+      <p class="shop">La boutique Sahar arrive bientôt.</p>
+    </div>
+  </section>
+
+  <div class="legal">
+    <div class="wrap">
+      <section id="confidentialite">
+        <h2>Confidentialité</h2>
+        <p class="updated">Dernière mise à jour : 4 novembre 2026</p>
+        <div class="cols">
+          <div lang="fr">
+            <p>Sahar ne collecte aucune donnée personnelle. L’application fonctionne entièrement sur votre téléphone (iPhone ou Android), sans compte, sans serveur, sans publicité et sans outil d’analyse.</p>
+            <h3>Position</h3>
+            <p>Votre position sert uniquement à calculer les horaires de prière et la direction de la Qibla. Elle est traitée sur votre téléphone et n’est jamais transmise à Sahar. La recherche de ville et le nom du lieu utilisent le service de cartes de votre téléphone (Apple sur iPhone, Google sur Android), selon leurs conditions.</p>
+            <h3>Réveils et notifications</h3>
+            <p>Les réveils sont programmés sur votre téléphone (alarmes du système : AlarmKit sur iPhone). Les notifications (hadith du jour, adhan, rappels du Ramadan, notification de secours après le réveil) sont planifiées sur le téléphone. Aucune information personnelle ne quitte votre téléphone.</p>
+            <h3>Réglages</h3>
+            <p>Vos réglages (heure du réveil, sonnerie, volume, langue, favoris, position choisie) sont enregistrés uniquement sur votre téléphone et supprimés avec l’application.</p>
+            <h3>Partage</h3>
+            <p>Quand vous partagez un hadith, l’image est créée sur votre téléphone et remise à l’application que vous choisissez ; Sahar n’en garde aucune copie.</p>
+            <h3>Mises à jour et avis</h3>
+            <p>Pour vous signaler une nouvelle version, Sahar demande le numéro de la dernière version à l’App Store (service de recherche public d’Apple) ou à Google Play : seul l’identifiant de l’application est envoyé. La demande d’avis est la fenêtre d’Apple ; Sahar ne reçoit rien.</p>
+            <h3>Hadiths</h3>
+            <p>Les hadiths et leurs traductions proviennent de l’Encyclopédie des hadiths prophétiques traduits (HadeethEnc.com). Ils sont inclus dans l’application et s’affichent sans connexion.</p>
+            <h3>Enfants</h3>
+            <p>Sahar ne collecte de données de personne, y compris des enfants.</p>
+            <h3>Contact</h3>
+            <p><span class="mail">sabriagca@icloud.com</span></p>
+          </div>
+          <div lang="en">
+            <p>Sahar does not collect any personal data. The app runs entirely on your phone (iPhone or Android), with no account, no server, no ads and no analytics.</p>
+            <h3>Location</h3>
+            <p>Your location is used only to compute prayer times and the Qibla direction. It is processed on your phone and never sent to Sahar. City search and place names use your phone’s maps service (Apple on iPhone, Google on Android), under their terms.</p>
+            <h3>Alarms and notifications</h3>
+            <p>Alarms are scheduled on your phone (system alarms: AlarmKit on iPhone). Notifications (hadith of the day, adhan, Ramadan reminders, backup notification after the alarm) are scheduled on the phone. No personal information leaves your phone.</p>
+            <h3>Settings</h3>
+            <p>Your settings (alarm time, sound, volume, language, favourites, chosen place) are stored only on your phone and deleted with the app.</p>
+            <h3>Sharing</h3>
+            <p>When you share a hadith, the image is created on your phone and handed to the app you choose; Sahar keeps no copy.</p>
+            <h3>Updates and reviews</h3>
+            <p>To tell you about a new version, Sahar asks the App Store (Apple’s public search service) or Google Play for the latest version number: only the app’s identifier is sent. The review prompt is Apple’s own window; Sahar receives nothing.</p>
+            <h3>Hadiths</h3>
+            <p>The hadiths and their translations come from the Encyclopedia of Translated Prophetic Hadiths (HadeethEnc.com). They are included in the app and are shown without a connection.</p>
+            <h3>Children</h3>
+            <p>Sahar collects no data from anyone, including children.</p>
+            <h3>Contact</h3>
+            <p><span class="mail">sabriagca@icloud.com</span></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="mentions">
+        <h2>Mentions légales</h2>
+        <p>Éditeur du site et de l’application : Sabri Agca. Contact : <span class="mail">sabriagca@icloud.com</span>.</p>
+        <p>Hébergement : GitHub Pages, GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
+        <p>App Store est une marque d’Apple Inc. Google Play est une marque de Google LLC.</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Sahar · Réveil Fajr</span>
+    <nav aria-label="Liens">
+      <a href="#confidentialite">Confidentialité</a>
+      <a href="#mentions">Mentions légales</a>
+      <a href="#questions">Aide</a>
+      <a href="https://apps.apple.com/app/id6815186387">App Store</a>
+    </nav>
+  </div>
+</footer>
+
+</body>
+</html>
